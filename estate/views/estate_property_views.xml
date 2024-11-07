@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<odoo>
+    
+    <record id="estate_action" model="ir.actions.act_window"> <!-- id is an external identifier. model has a fixed value of ir.actions.act_window -->
+        <field name="name">Properties</field> <!-- name is the name of the action. (has to be name="name">Estate action) don't know why -->
+        <field name="res_model">estate.property</field> <!-- res_model is the model which the action applies to. -->
+        <field name="view_mode">list,form</field> <!-- view_mode -->
+    </record>
+
+    <!-- 1st Depth List of all estate_property records -->
+    <record id="estate_view_list" model="ir.ui.view"> <!-- since the ID of the record is not being called anywhere, unlock estate_action how does this get used where it does?-->
+        <field name="name">Estate List</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <list string="Tests">
+                <field name="name"/>
+                <field name="postcode"/>
+                <field name="bedrooms"/>
+                <field name="living_area"/>
+                <field name="expected_price"/>
+                <field name="selling_price"/>
+                <field name="date_availability"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- 2nd Depth Form for editing and seeing details of specific estate_property records, From: estate_view_list(this file)/estate_menu_action(estate_menus.xml) -->
+    <record id="estate_view_form" model="ir.ui.view"> <!-- since the ID of the record is not being called anywhere, unlock estate_action how does this get used where it does?-->
+        <field name="name">Estate Form</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <form string="Test">
+                <sheet>
+                    <group>
+                    <field name="name" style="font-size:25pt;"/>
+                        <group>
+                            <field name="postcode"/>
+                            <field name="date_availability"/>
+                        </group>
+                        <group>
+                            <field name="expected_price"/>
+                            <field name="selling_price"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">\
+                            <group>
+                                <field name="description"/>
+                                <field name="bedrooms"/>
+                                <field name="living_area"/>
+                                <field name="facades"/>
+                                <field name="garage"/>
+                                <field name="garden"/>
+                                <field name="garden_area"/>
+                                <field name="garden_orientation"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_esate_search" model="ir.ui.view">
+        <field name="name">Estate Search</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <search string="uhhhh">
+                <field name="name"/>
+                <field name="postcode"/>
+                <field name="bedrooms"/>
+                <field name="living_area"/>
+                <field name="expected_price"/>
+                <field name="selling_price"/>
+                <field name="date_availability"/>
+                <separator/>
+                <filter string="Available" name="state" domain="['|', ('state', '=', 'new'), ('state', '=', 'offer_received')]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Postcode" name="postcode" context="{'group_by':'postcode'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+</odoo>
