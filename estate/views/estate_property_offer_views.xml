@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<odoo>
+    
+    
+    <record id="estate_offer_view_list" model="ir.ui.view">
+        <field name="name">Offer List</field>
+        <field name="model">estate.property.offer</field>
+        <field name="arch" type="xml">
+            <list string="Offers">
+                <field name="price"></field>
+                <field name="partner_id"></field>
+                <field name="status"></field>
+            </list>
+        </field>
+    </record>
+
+    <record id="estate_offer_view_form" model="ir.ui.view"> <!-- since the ID of the record is not being called anywhere, unlock estate_action how does this get used where it does?-->
+        <field name="name">Offer Form</field>
+        <field name="model">estate.property.offer</field>
+        <field name="arch" type="xml">
+            <form string="Offer">
+                <group>
+                    <field name="price"></field>
+                    <field name="partner_id"></field>
+                    <field name="status"></field>  
+                </group>
+            </form>
+        </field>
+    </record>
+
+
+    
+</odoo>

@@ -1,8 +1,12 @@
 <?xml version="1.0"?>
 <odoo>
     <menuitem id="estate_menu_root" name="Estate">
-        <menuitem id="estate_first_level_menu" name="Advertisements">
-            <menuitem id="estate_menu_action" name="Properties" action="estate_action"/>
+        <menuitem id="estate_first_level_menu_a" name="Advertisements">
+            <menuitem id="estate_menu_action_a1" name="Properties" action="estate_action"/>
+        </menuitem>
+        <menuitem id="estate_first_level_menu_b" name="Settings">
+            <menuitem id="estate_menu_action_b1" name="Property Types" action="estate_type_action"/>
+            <menuitem id="estate_menu_action_b2" name="Property Tags" action="estate_tag_action"/>
         </menuitem>                                                                      <!-- What code is being executed and when? Where is binding surface? -->
     </menuitem>
 </odoo>

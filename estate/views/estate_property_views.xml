@@ -13,6 +13,7 @@
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
             <list string="Tests">
+                <field name="property_type_id"/>
                 <field name="name"/>
                 <field name="postcode"/>
                 <field name="bedrooms"/>
@@ -33,7 +34,9 @@
                 <sheet>
                     <group>
                     <field name="name" style="font-size:25pt;"/>
+                    <field name="tag_ids" widget="many2many_tags"/>
                         <group>
+                            <field name="property_type_id"/>
                             <field name="postcode"/>
                             <field name="date_availability"/>
                         </group>
@@ -43,7 +46,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Description">\
+                        <page string="Description">
                             <group>
                                 <field name="description"/>
                                 <field name="bedrooms"/>
@@ -53,6 +56,17 @@
                                 <field name="garden"/>
                                 <field name="garden_area"/>
                                 <field name="garden_orientation"/>
+                            </group>
+                        </page>
+                        <page string="Offers">
+                            <list>
+                                <field name="offer_ids"/>
+                            </list>
+                        </page>
+                        <page string="Other info">
+                            <group>
+                                <field name="salesperson_id"/>
+                                <field name="buyer_id"/>
                             </group>
                         </page>
                     </notebook>
@@ -66,6 +80,7 @@
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
             <search string="uhhhh">
+                <field name="property_type_id"/>
                 <field name="name"/>
                 <field name="postcode"/>
                 <field name="bedrooms"/>
