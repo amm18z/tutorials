@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, exceptions
 
 class EstateProperty(models.Model):
 	_name = "estate.property"
@@ -18,7 +18,7 @@ class EstateProperty(models.Model):
 	garden = fields.Boolean(string='Garden')
 	garden_area = fields.Integer(string='Garden Area (sqm)')
 	garden_orientation = fields.Selection(string='Garden Orientation', selection = [('north','North'),('south','South'),('east','East'),('west','West')])
-	state = fields.Selection(string='Status', selection = [('new', 'New'), ('offer_received', 'Offer Received'), ('offer_accepted', 'Offer Accepted'), ('sold', 'Sold'), ('cancelled', 'Cancelled')], copy=False, default='new')
+	state = fields.Selection(string='Status', selection = [('new', 'New'), ('offer_received', 'Offer Received'), ('offer_accepted', 'Offer Accepted'), ('sold', 'Sold'), ('cancelled', 'Cancelled')], copy=False, default='new', readonly=True)
 	active = fields.Boolean(default=True)
 
 	property_type_id = fields.Many2one("estate.property.type", string="Property Type")
@@ -63,3 +63,19 @@ class EstateProperty(models.Model):
 		else:
 			self.garden_area = 0
 			self.garden_orientation = ''
+
+	def action_sold_button(self):
+		for record in self:
+			if record.state == 'cancelled':
+				raise exceptions.UserError("Cancelled properties cannot be sold.")
+			else:
+				record.state = 'sold'
+		return True							# Chapter 9: Finally, a public method should always return something so that it can be called through XML-RPC. When in doubt, just return True.
+
+	def action_cancel_button(self):
+		for record in self:
+			if record.state == 'sold':
+				raise exceptions.UserError("Sold properties cannot be cancelled.")
+			else:
+				record.state = 'cancelled'
+		return True							# Chapter 9: Finally, a public method should always return something so that it can be called through XML-RPC. When in doubt, just return True.

@@ -5,7 +5,7 @@ class EstatePropertyOffer(models.Model):
     _description = "Offers for properties, buildings, and collections of buildings, and the land associated with each."
 
     price = fields.Float(string="Price")
-    status = fields.Selection(string="State",copy=False,selection=[('accepted','Accepted'),('refused','Refused')])
+    state = fields.Selection(string="Status",copy=False,selection=[('accepted','Accepted'),('refused','Refused')])
     partner_id = fields.Many2one("res.partner", string="Buyer",required=True)
     property_id = fields.Many2one("estate.property",string="Property",required=True)
 
@@ -29,3 +29,15 @@ class EstatePropertyOffer(models.Model):
                 record.validity = (record.date_deadline - fields.Date.to_date(record.create_date)).days
             else:
                 record.validity = (record.date_deadline - fields.Date.today()).days
+
+    def action_accept_offer_button(self):
+        for record in self:
+            record.state = 'accepted'
+            record.property_id.buyer_id = record.partner_id
+            record.property_id.selling_price = record.price
+            return True
+
+    def action_refuse_offer_button(self):
+        for record in self:
+            record.state = 'refused'
+            return True
