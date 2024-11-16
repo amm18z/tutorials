@@ -3,6 +3,7 @@ from odoo import api, fields, models
 class EstatePropertyOffer(models.Model):
     _name = "estate.property.offer"
     _description = "Offers for properties, buildings, and collections of buildings, and the land associated with each."
+    _sql_constraints = [('check_offer_price_positive', 'CHECK(price > 0)', 'The offer price must be strictly positive')]
 
     price = fields.Float(string="Price")
     state = fields.Selection(string="Status",copy=False,selection=[('accepted','Accepted'),('refused','Refused')])

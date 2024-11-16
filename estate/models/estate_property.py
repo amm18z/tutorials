@@ -3,6 +3,8 @@ from odoo import api, fields, models, exceptions
 class EstateProperty(models.Model):
 	_name = "estate.property"
 	_description = "A building or buildings and the land belonging to it or them."
+	_sql_constraints = [('check_expected_price_positive', 'CHECK(expected_price > 0)', 'The expected price should be strictly positive.'),
+						('check_selling_price_positive', 'CHECK(selling_price > 0)', 'The selling price should strictly positive.')]
 
 
 	name = fields.Char(string='Title', required=True)
@@ -20,6 +22,8 @@ class EstateProperty(models.Model):
 	garden_orientation = fields.Selection(string='Garden Orientation', selection = [('north','North'),('south','South'),('east','East'),('west','West')])
 	state = fields.Selection(string='Status', selection = [('new', 'New'), ('offer_received', 'Offer Received'), ('offer_accepted', 'Offer Accepted'), ('sold', 'Sold'), ('cancelled', 'Cancelled')], copy=False, default='new', readonly=True)
 	active = fields.Boolean(default=True)
+
+	best_price = fields.Float(compute="_compute_best_price", string="Best Offer")
 
 	property_type_id = fields.Many2one("estate.property.type", string="Property Type")
 	buyer_id = fields.Many2one("res.partner", string = "Buyer", copy=False)
@@ -42,7 +46,7 @@ class EstateProperty(models.Model):
 		Iterating over self gives the records one by one, where each record is itself a collection of size 1. 
 		You can access/assign fields on single records by using the dot notation, e.g. record.name. '''
 
-	best_price = fields.Float(compute="_compute_best_price", string="Best Offer")
+	
 
 	# For relational fields it's possible to use paths through a field as a dependency
 	@api.depends("offer_ids.price")
@@ -79,3 +83,18 @@ class EstateProperty(models.Model):
 			else:
 				record.state = 'cancelled'
 		return True							# Chapter 9: Finally, a public method should always return something so that it can be called through XML-RPC. When in doubt, just return True.
+	
+	@api.constrains('selling_price', 'expected_price', 'offer_ids')
+	def _check_selling_price(self):
+		acceptedOfferExists = False
+		for record in self:
+			if len(record.offer_ids) > 0:
+				for offer in record.offer_ids:
+					if offer.state == 'accepted':
+						acceptedOfferExists = True
+						break
+				
+				if acceptedOfferExists == True:
+					if record.selling_price < record.expected_price * .90:
+						raise exceptions.ValidationError("The selling price must be at least 90% of the expected price")
+
