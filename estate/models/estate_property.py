@@ -5,6 +5,7 @@ class EstateProperty(models.Model):
 	_description = "A building or buildings and the land belonging to it or them."
 	_sql_constraints = [('check_expected_price_positive', 'CHECK(expected_price > 0)', 'The expected price should be strictly positive.'),
 						('check_selling_price_positive', 'CHECK(selling_price > 0)', 'The selling price should strictly positive.')]
+	_order = 'id desc' # Where is "id" coming from? it's not a field on the model... field automatically created when estate_property relation is created? by whom? psql? or the ORM layer?
 
 
 	name = fields.Char(string='Title', required=True)
@@ -68,7 +69,7 @@ class EstateProperty(models.Model):
 			self.garden_area = 0
 			self.garden_orientation = ''
 
-	def action_sold_button(self):
+	def action_sold_button(self):		# having a <button/> and adding <... type='object' ...> to it means odoo will look for and find function of the same name: this one 
 		for record in self:
 			if record.state == 'cancelled':
 				raise exceptions.UserError("Cancelled properties cannot be sold.")
@@ -89,8 +90,14 @@ class EstateProperty(models.Model):
 		acceptedOfferExists = False
 		for record in self:
 			if len(record.offer_ids) > 0:
+
+				record.state = 'offer_received'			# inserting this behavior into _check_selling_price for convenience because tutorial never explicitly told me to do it, maybe it's own function is more ideal
+
 				for offer in record.offer_ids:
 					if offer.state == 'accepted':
+
+						record.state = 'offer_accepted'		# inserting this behavior into _check_selling_price for convenience because tutorial never explicitly told me to do it, maybe it's own function is more ideal
+
 						acceptedOfferExists = True
 						break
 				

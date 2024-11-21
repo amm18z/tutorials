@@ -4,18 +4,22 @@
     <record id="estate_action" model="ir.actions.act_window"> <!-- id is an external identifier. model has a fixed value of ir.actions.act_window -->
         <field name="name">Properties</field> <!-- name is the name of the action. (has to be name="name">Estate action) don't know why -->
         <field name="res_model">estate.property</field> <!-- res_model is the model which the action applies to. -->
+        <field name="search_view_id" ref="estate.view_esate_search"/>
+        <field name="context">{'search_default_available': True}</field>
         <field name="view_mode">list,form</field> <!-- view_mode -->
     </record>
 
     <!-- 1st Depth List of all estate_property records -->
-    <record id="estate_view_list" model="ir.ui.view"> <!-- since the ID of the record is not being called anywhere, unlock estate_action how does this get used where it does?-->
+    <record id="estate_view_list" model="ir.ui.view"> <!-- since the ID of the record is not being called anywhere, unlock estate_action how does this get used where it does? Found the answer, odoo creates it: https://www.odoo.com/documentation/18.0/developer/tutorials/backend.html#reserved-fields
+    -->
         <field name="name">Estate List</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
-            <list string="Tests">
-                <field name="property_type_id"/>
+            <list string="Tests" decoration-success="state=='offer_accepted' or state=='offer_received'" decoration-bf="state=='offer_accepted'" decoration-muted="state=='sold'">
                 <field name="name"/>
+                <field name="property_type_id"/>
                 <field name="postcode"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="bedrooms"/>
                 <field name="living_area"/>
                 <field name="expected_price"/>
@@ -32,16 +36,17 @@
         <field name="arch" type="xml">
             <form string="Test">
                 <header>
-                    <button name="action_sold_button" type="object" string="Sold"/>
-                    <button name="action_cancel_button" type="object" string="Cancel"/>
+                    <button name="action_sold_button" type="object" string="Sold" invisible="state == 'sold' or state == 'cancelled'"/>
+                    <button name="action_cancel_button" type="object" string="Cancel" invisible="state == 'sold' or state == 'cancelled'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="new,offer_received,offer_accepted,sold"/>
                 </header>
                 <sheet>
                     <group>
                     <field name="name" style="font-size:25pt;"/>
-                    <field name="tag_ids" widget="many2many_tags"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                         <group>
                             <field name="state"/>
-                            <field name="property_type_id"/>
+                            <field name="property_type_id" options="{'no_create': True, 'no_create_edit': True}"/>
                             <field name="postcode"/>
                             <field name="date_availability"/>
                         </group>
@@ -60,14 +65,14 @@
                                 <field name="facades"/>
                                 <field name="garage"/>
                                 <field name="garden"/>
-                                <field name="garden_area"/>
-                                <field name="garden_orientation"/>
+                                <field name="garden_area" invisible="not garden"/>
+                                <field name="garden_orientation" invisible="not garden"/>
                                 <field name="total_area"/>
                             </group>
                         </page>
                         <page string="Offers">
                             <list>
-                                <field name="offer_ids"/>
+                                <field name="offer_ids" readonly="state=='offer_accepted' or state=='sold' or state=='cancelled'"/>
                             </list>
                         </page>
                         <page string="Other info">
@@ -91,12 +96,12 @@
                 <field name="name"/>
                 <field name="postcode"/>
                 <field name="bedrooms"/>
-                <field name="living_area"/>
+                <field name="living_area" filter_domain="[('living_area', '>=', self)]"/>
                 <field name="expected_price"/>
                 <field name="selling_price"/>
                 <field name="date_availability"/>
                 <separator/>
-                <filter string="Available" name="state" domain="['|', ('state', '=', 'new'), ('state', '=', 'offer_received')]"/>
+                <filter string="Available" name="available" domain="['|', ('state', '=', 'new'), ('state', '=', 'offer_received')]"/>
                 <group expand="1" string="Group By">
                     <filter string="Postcode" name="postcode" context="{'group_by':'postcode'}"/>
                 </group>
