@@ -90,9 +90,6 @@ class EstateProperty(models.Model):
 		acceptedOfferExists = False
 		for record in self:
 			if len(record.offer_ids) > 0:
-
-				record.state = 'offer_received'			# inserting this behavior into _check_selling_price for convenience because tutorial never explicitly told me to do it, maybe it's own function is more ideal
-
 				for offer in record.offer_ids:
 					if offer.state == 'accepted':
 
@@ -104,4 +101,11 @@ class EstateProperty(models.Model):
 				if acceptedOfferExists == True:
 					if record.selling_price < record.expected_price * .90:
 						raise exceptions.ValidationError("The selling price must be at least 90% of the expected price")
+
+	@api.ondelete(at_uninstall=False)	# using ondelete decorator instead of overriding unlink because overriding unlink messes with uninstallation
+	def _unlink_if_state_new_or_cancelled(self):
+		for record in self:
+			if record.state != 'new' and record.state != 'cancelled':
+				raise exceptions.UserError("You cannot delete a property that is not in the 'New' or 'Cancelled' state.")
+				# no need to return super() because this method (thanks to @api.ondelete) is just a hook that adds logic right BEFORE unlink() is executed on a record
 

@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, exceptions
 
 class EstatePropertyOffer(models.Model):
     _name = "estate.property.offer"
@@ -45,3 +45,25 @@ class EstatePropertyOffer(models.Model):
         for record in self:
             record.state = 'refused'
             return True
+                                
+    @api.model  # Declare this method as a "model method" (works at the model level, not tied to specific records).
+    def create(self, vals):  # self: used to interact with the actual records in the database (read, update, delete, etc.). Refers to the records (recordset) in memory. If no records exist (e.g., in create()) self represents the model. # Override the create method to add custom logic when a new offer is created.
+                             # vals: carries input data for the new record(s) being created or updated. Only represents the data at the moment the method is called. It is not tied to any actual records in the database yet. Temporary and specific to the create() or write() call.
+        # Check if the `property_id` is present in the input dictionary `vals`.
+        if 'property_id' in vals:
+            # Use self.env to access the 'estate.property' model and get the property record associated with the given property_id.
+            property_id = self.env['estate.property'].browse(vals['property_id'])
+
+            # Filter existing offers on the property to find if any have a price higher than the new offer's price.
+            higher_offers = property_id.offer_ids.filtered(lambda offer: offer.price > vals.get('price', 0))
+
+            # If there are any higher offers already, raise a UserError to prevent the new offer from being created.
+            if higher_offers:
+                raise exceptions.UserError("You cannot create an offer with a lower amount than an existing offer.")
+
+            # If the offer is valid, update the state of the property to 'Offer Received'.
+            property_id.state = 'offer_received'
+
+        # Call the parent (super) create method to actually insert the new offer into the database.
+        # This ensures that the record is created after our custom logic is applied.
+        return super().create(vals)

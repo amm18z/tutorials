@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="inherited_res_users_view_form" model="ir.ui.view">
+        <field name="name">inherited.res.users.form.inherit.test</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <!-- Correct XPath to target the "Preferences" page -->
+            <xpath expr="//page[@name='account_security']" position="after">
+                <!-- New page added after the Preferences tab -->
+                <page name="properties" string="Properties">
+                    <group name="property_group" string="Property Group">
+                        <field name="property_ids" widget="one2many_list" />
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
