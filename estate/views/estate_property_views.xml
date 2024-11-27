@@ -4,9 +4,9 @@
     <record id="estate_action" model="ir.actions.act_window"> <!-- id is an external identifier. model has a fixed value of ir.actions.act_window -->
         <field name="name">Properties</field> <!-- name is the name of the action. (has to be name="name">Estate action) don't know why -->
         <field name="res_model">estate.property</field> <!-- res_model is the model which the action applies to. -->
-        <field name="search_view_id" ref="estate.view_esate_search"/>
+        <field name="search_view_id" ref="estate.view_estate_search"/>
         <field name="context">{'search_default_available': True}</field>
-        <field name="view_mode">list,form</field> <!-- view_mode -->
+        <field name="view_mode">list,form,kanban</field> <!-- view_mode -->
     </record>
 
     <!-- 1st Depth List of all estate_property records -->
@@ -26,6 +26,38 @@
                 <field name="selling_price"/>
                 <field name="date_availability"/>
             </list>
+        </field>
+    </record>
+
+    <!-- 1st Depth Kanban of all estate_property records -->
+    <record id="estate_view_kanban" model="ir.ui.view">
+        <field name="name">estate.property.kanban</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="property_type_id" groups_draggable="False" records_draggable="False">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <strong><field name="name"/></strong>
+                            <div>
+                                Expected Price:
+                                <field name="expected_price"/>
+                            </div>
+                            <div t-if="record.best_price.raw_value &gt; 0">
+                                Best Offer:
+                                <field name="best_price"/>
+                            </div>
+                            <div t-if="record.selling_price.raw_value &gt; 0">
+                                Selling Price:
+                                <field name="selling_price"/>
+                            </div>
+                            <div>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 
@@ -87,7 +119,7 @@
         </field>
     </record>
 
-    <record id="view_esate_search" model="ir.ui.view">
+    <record id="view_estate_search" model="ir.ui.view">
         <field name="name">Estate Search</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
