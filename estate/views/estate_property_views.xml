@@ -1,13 +1,7 @@
 <?xml version="1.0"?>
 <odoo>
     
-    <record id="estate_action" model="ir.actions.act_window"> <!-- id is an external identifier. model has a fixed value of ir.actions.act_window -->
-        <field name="name">Properties</field> <!-- name is the name of the action. (has to be name="name">Estate action) don't know why -->
-        <field name="res_model">estate.property</field> <!-- res_model is the model which the action applies to. -->
-        <field name="search_view_id" ref="estate.view_estate_search"/>
-        <field name="context">{'search_default_available': True}</field>
-        <field name="view_mode">list,form,kanban</field> <!-- view_mode -->
-    </record>
+    
 
     <!-- 1st Depth List of all estate_property records -->
     <record id="estate_view_list" model="ir.ui.view"> <!-- since the ID of the record is not being called anywhere, unlock estate_action how does this get used where it does? Found the answer, odoo creates it: https://www.odoo.com/documentation/18.0/developer/tutorials/backend.html#reserved-fields
@@ -139,6 +133,14 @@
                 </group>
             </search>
         </field>
+    </record>
+
+    <record id="estate_action" model="ir.actions.act_window"> <!-- id is an external identifier. model has a fixed value of ir.actions.act_window -->
+        <field name="name">Properties</field> <!-- name is the name of the action. (has to be name="name">Estate action) don't know why -->
+        <field name="res_model">estate.property</field> <!-- res_model is the model which the action applies to. -->
+        <field name="search_view_id" ref="estate.view_estate_search"/>
+        <field name="context">{'search_default_available': True}</field>
+        <field name="view_mode">list,form,kanban</field> <!-- view_mode -->
     </record>
     
 </odoo>
