@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+  <t t-name="awesome_owl.todolist">
+    <div>
+        <t t-foreach="todos" t-as="todo" t-key="todo.id">
+            <TodoItem todo="todo"/>
+        </t>
+    </div>
+  </t>
+</templates>
+
+<!-- QWeb has an iteration directive 't-foreach' which take an expression returning the collection to iterate on, 
+and a second parameter 't-as' providing the name to use for the “current item” of the iteration: -->
+
+<!-- An important difference should be made with the usual QWeb behaviour: Owl requires the presence of a t-key directive, to be able to properly reconcile renderings. -->
+
+<!-- So, the 't-key' directive is used to give an identity to an element. 
+It allows Owl to understand if different elements of a list are actually different or not. -->

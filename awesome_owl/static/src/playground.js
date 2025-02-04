@@ -3,7 +3,7 @@
 import { Component, markup, useState } from "@odoo/owl";
 import { Counter } from "./counter/counter";
 import { Card } from "./card/card"
-import { TodoList } from "./todolist/todolist"
+import { TodoList } from "./todo/todolist"
 
 
 
