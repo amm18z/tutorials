@@ -8,9 +8,12 @@ export class TodoList extends Component {
     static components = {TodoItem };
 
     setup() {
-        this.todos = useState( [{ id: 1, description: "buy milk", isCompleted: false }, 
-                                { id: 2, description: "buy bread", isCompleted: true }, 
-                                { id: 3, description: "buy eggs", isCompleted: false }] );
+        // this.todos = useState( [{ id: 1, description: "buy milk", isCompleted: false }, 
+        //                         { id: 2, description: "buy bread", isCompleted: true }, 
+        //                         { id: 3, description: "buy eggs", isCompleted: false }] );
+
+        this.todos = useState([]);
+        this.nextId = 0;
     }
 
     /* ^ How does OWL/the interpreter/whatever is relevant here know that todos is an array of TodoItem objects? */
@@ -25,4 +28,15 @@ export class TodoList extends Component {
                     static components = {TodoItem };
                 in this file.
     */
+
+    addTodo(ev) {
+        if (ev.keyCode === 13 && ev.target.value != "") {
+            this.todos.push({
+                id: this.nextId++,
+                description: ev.target.value,
+                isCompleted: false
+            });
+            ev.target.value = "";
+        }
+    }
 }

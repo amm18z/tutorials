@@ -8,16 +8,16 @@ import { TodoList } from "./todo/todolist"
 
 
 export class Playground extends Component {
-  static template = "awesome_owl.playground";
+    static template = "awesome_owl.playground";
 
-  static components = { Counter, Card, TodoList };
+    static components = { Counter, Card, TodoList };
 
-  setup() {
-    this.str1 = markup("<div class='text-primary'>some content<div/>");
-    this.sum = useState({value: 2});
-  }
+    setup() {
+        this.str1 = markup("<div class='text-primary'>some content<div/>");
+        this.sum = useState({value: 2});
+    }
 
-  incrementSum() {
-    this.sum.value++;
-  }
+    incrementSum() {
+        this.sum.value++;
+    }
 }

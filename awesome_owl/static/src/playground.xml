@@ -9,10 +9,13 @@
       <Card title="'card 1'" content="str1"/>
       <Card title="'card 2'" content="'content of card 2'"/>
     </div>
-    <TodoList/>
     <div>
       Sum of counters: <t t-esc="sum.value"/>
     </div>
+    <div>
+      <TodoList/>
+    </div>
+    
   </t>
 
 </templates>
