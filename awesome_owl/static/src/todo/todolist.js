@@ -1,5 +1,6 @@
 import { Component, useState } from "@odoo/owl";
 import { TodoItem } from "./todoitem";
+import { useAutofocus } from "../utils.js";
 
 export class TodoList extends Component {
     static template = "awesome_owl.todolist";
@@ -14,6 +15,7 @@ export class TodoList extends Component {
 
         this.todos = useState([]);
         this.nextId = 0;
+        useAutofocus("input");
     }
 
     /* ^ How does OWL/the interpreter/whatever is relevant here know that todos is an array of TodoItem objects? */
