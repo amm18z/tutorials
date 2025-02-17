@@ -2,13 +2,14 @@
 <templates xml:space="preserve">
 
   <t t-name="awesome_owl.counter">
+  <div class="d-inline-block border p-2 m-2">
     <div style="display: inline-block; margin-right: 10px;">
         <p>Counter: <t t-esc="state.value"/></p>
     </div>
     <div style="display: inline-block; margin-right: 10px;">
-        <button class="btn btn-primary" t-on-click="increment">Increment</button>
+        <button class="btn btn-primary" style="color: white; background-color: purple;" t-on-click="increment">Increment</button>
     </div>
-    
+  </div>  
   </t>
 
 </templates>

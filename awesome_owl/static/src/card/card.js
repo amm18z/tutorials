@@ -4,13 +4,13 @@ export class Card extends Component {
     static template = "awesome_owl.card";
 
     //static props = ['title', 'content']
-    // ^ props with no validation
+    // ^ props validation
 
     static props = {
         title: String,
         content: String
     };
-    // ^ props with validation
+    // ^ props validation with type
 
     setup() {
         // this.state = useState({  });
