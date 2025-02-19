@@ -6,8 +6,9 @@
       <p>Hello World</p>
       <Counter onChange.bind="incrementSum"/>
       <Counter onChange.bind="incrementSum"/>
-      <Card title="'card 1'" content="str1"/>
-      <Card title="'card 2'" content="'content of card 2'"/>
+      <Card title="'card 1'"> <Counter onChange.bind="incrementSum"/> </Card>
+      <Card title="'card 2'"> <span>some content</span> </Card>
+      <Card title="'card 3'"> <TodoList/> </Card>
     </div>
     <div>
       Sum of counters: <t t-esc="sum.value"/>
