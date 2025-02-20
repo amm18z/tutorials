@@ -13,9 +13,11 @@ export class Card extends Component {
     // ^ props validation with type
 
     setup() {
-        // this.state = useState({  });
-        // not setting anything up yet really
+        this.state = useState({isOpen: Boolean});
+        this.state.isOpen = true;
     }
 
-    
+    toggle(){
+        this.state.isOpen = !this.state.isOpen;
+    }
 }
